@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus 360 | Campus Operations & Service Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate">
+
+    <!-- Global Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Navigation Header (Hidden on Login screen) -->
+    <header id="main-header" class="site-header d-none">
+        <div class="nav-container">
+            <div class="brand-group">
+                <a href="#dashboard" class="brand-logo">
+                    <div class="logo-icon-box">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">SmartCampus <span class="highlight">360</span></span>
+                        <span class="brand-badge">Enterprise OS</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Main Navigation Links -->
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-link" data-route="dashboard">
+                    <i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span>
+                </a>
+                <a href="#tickets" class="nav-link" data-route="tickets">
+                    <i class="fa-solid fa-ticket-simple"></i> <span>Maintenance & Requests</span>
+                </a>
+                <a href="#bookings" class="nav-link" data-route="bookings">
+                    <i class="fa-solid fa-calendar-check"></i> <span>Facility Booking</span>
+                </a>
+                <a href="#lost-found" class="nav-link" data-route="lost-found">
+                    <i class="fa-solid fa-magnifying-glass-location"></i> <span>Lost & Found</span>
+                </a>
+                <a href="#analytics" class="nav-link" data-route="analytics" id="nav-link-analytics">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Analytics & SLAs</span>
+                </a>
+            </nav>
+
+            <!-- User Status & Quick Role Switcher (For Evaluation & Demo) -->
+            <div class="nav-actions">
+                <!-- Notifications Dropdown -->
+                <div class="dropdown-wrapper">
+                    <button id="notification-btn" class="icon-btn" title="Campus Alerts">
+                        <i class="fa-regular fa-bell"></i>
+                        <span id="notification-badge" class="badge-pill d-none">0</span>
+                    </button>
+                    <div id="notification-menu" class="dropdown-menu notification-menu d-none">
+                        <div class="dropdown-header">
+                            <span class="title">Campus Notifications</span>
+                            <button id="mark-all-read-btn" class="text-link">Mark all read</button>
+                        </div>
+                        <div id="notification-list" class="notification-list">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Role Switcher Pill for College Evaluation / Viva Presentation -->
+                <div class="demo-role-pill">
+                    <label for="demo-role-select"><i class="fa-solid fa-wand-magic-sparkles"></i> Switch Demo:</label>
+                    <select id="demo-role-select" class="role-select">
+                        <option value="student">🎓 Student (Aarav)</option>
+                        <option value="faculty">👩‍🏫 Faculty (Prof. Sunita)</option>
+                        <option value="staff_elec">🔧 Electrician (Rajesh)</option>
+                        <option value="staff_av">🎥 AV Tech (Vikram)</option>
+                        <option value="admin" selected>🛡️ Admin (Dr. Alok)</option>
+                    </select>
+                </div>
+
+                <!-- Current User Profile Pill -->
+                <div class="user-profile-pill">
+                    <div class="avatar-circle" id="user-avatar">AD</div>
+                    <div class="user-meta">
+                        <span class="user-name" id="nav-user-name">Administrator</span>
+                        <span class="user-role-badge" id="nav-user-role">ADMIN</span>
+                    </div>
+                    <button id="logout-btn" class="logout-btn" title="Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Application Shell -->
+    <main id="app-viewport" class="main-viewport">
+
+        <!-- ========================================================= -->
+        <!-- VIEW 1: ENTERPRISE AUTHENTICATION (LOGIN & REGISTRATION)    -->
+        <!-- ========================================================= -->
+        <section id="view-login" class="app-view d-none">
+            <!-- Institutional System Header Bar -->
+            <div class="login-system-bar">
+                <div class="system-bar-left">
+                    <div class="status-indicator">
+                        <span class="pulsing-dot"></span>
+                        <span class="status-text">Campus Cloud: <strong>Operational</strong></span>
+                    </div>
+                    <span class="system-divider">|</span>
+                    <span class="system-subtext"><i class="fa-solid fa-shield-halved text-primary"></i> 256-Bit SSL/JWT Protected</span>
+                    <span class="system-divider">|</span>
+                    <span class="system-subtext"><i class="fa-solid fa-server text-cyan"></i> Cluster Node: AP-SOUTH-1</span>
+                </div>
+                <div class="system-bar-right">
+                    <span id="live-system-clock" class="system-clock"><i class="fa-regular fa-clock"></i> Mon, 19 Oct 2026 16:15:00</span>
+                </div>
+            </div>
+
+            <div class="login-wrapper">
+                <!-- Left Hero & Quick Evaluator Persona Panel -->
+                <div class="login-hero">
+                    <div class="hero-content">
+                        <div class="campus-crest-row">
+                            <div class="crest-icon">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div class="crest-meta">
+                                <span class="crest-org">Smart Campus Enterprise OS</span>
+                                <span class="crest-code">Version 3.2.0 • ISO/IEC 27001</span>
+                            </div>
+                        </div>
+
+                        <h1 class="login-main-title">Centralized Campus Operations &amp; Service Platform</h1>
+                        <p class="login-main-desc">A unified digital platform connecting students, faculty, maintenance engineers, and campus directors. Eliminating paper requisitions, phone follow-ups, and double-booked halls.</p>
+
+                        <!-- Operational Metric Highlights -->
+                        <div class="hero-stats-row">
+                            <div class="hero-stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-number highlight-emerald">100%</span>
+                                    <i class="fa-solid fa-circle-check text-emerald"></i>
+                                </div>
+                                <span class="stat-lbl">Conflict-Free Hall Booking</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-number highlight-blue">&lt; 2h</span>
+                                    <i class="fa-solid fa-bolt text-primary"></i>
+                                </div>
+                                <span class="stat-lbl">Emergency Hazard SLA</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <div class="stat-top">
+                                    <span class="stat-number highlight-purple">AI Smart</span>
+                                    <i class="fa-solid fa-brain-circuit text-purple"></i>
+                                </div>
+                                <span class="stat-lbl">Automated Triage &amp; Dispatch</span>
+                            </div>
+                        </div>
+
+                        <!-- 1-Click Persona Cards for College Viva & Examiner Review -->
+                        <div class="demo-login-box">
+                            <div class="demo-box-header">
+                                <div class="demo-box-title">
+                                    <i class="fa-solid fa-user-check highlight"></i> 1-Click Evaluation Logins (College Project Defense):
+                                </div>
+                                <span class="demo-box-hint">Click any role to test its custom dashboard</span>
+                            </div>
+
+                            <div class="demo-buttons-grid">
+                                <div class="persona-card admin" onclick="quickLogin('admin', 'admin123')">
+                                    <div class="persona-avatar"><i class="fa-solid fa-user-shield"></i></div>
+                                    <div class="persona-info">
+                                        <div class="persona-role">Administrator</div>
+                                        <div class="persona-name">Dr. Alok Verma</div>
+                                        <div class="persona-detail">Command Center • Approvals • SLAs</div>
+                                    </div>
+                                    <div class="persona-action"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+                                </div>
+
+                                <div class="persona-card faculty" onclick="quickLogin('faculty', 'faculty123')">
+                                    <div class="persona-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+                                    <div class="persona-info">
+                                        <div class="persona-role">Faculty Member</div>
+                                        <div class="persona-name">Prof. Sunita Sharma</div>
+                                        <div class="persona-detail">Priority Booking • Academic Logistics</div>
+                                    </div>
+                                    <div class="persona-action"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+                                </div>
+
+                                <div class="persona-card student" onclick="quickLogin('student', 'student123')">
+                                    <div class="persona-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                                    <div class="persona-info">
+                                        <div class="persona-role">Student User</div>
+                                        <div class="persona-name">Aarav Patel (Final Year IT)</div>
+                                        <div class="persona-detail">Complaints • Status Tracker • Lost &amp; Found</div>
+                                    </div>
+                                    <div class="persona-action"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+                                </div>
+
+                                <div class="persona-card staff" onclick="quickLogin('staff_elec', 'staff123')">
+                                    <div class="persona-avatar"><i class="fa-solid fa-wrench"></i></div>
+                                    <div class="persona-info">
+                                        <div class="persona-role">Maintenance Staff</div>
+                                        <div class="persona-name">Rajesh Kumar (Electrician)</div>
+                                        <div class="persona-detail">Assigned Work Orders • Resolution Notes</div>
+                                    </div>
+                                    <div class="persona-action"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Authentication Card -->
+                <div class="login-card-container">
+                    <div class="login-card glass-panel">
+                        <div class="auth-tabs">
+                            <button id="tab-btn-login" class="auth-tab active" onclick="switchAuthTab('login')">
+                                <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                            </button>
+                            <button id="tab-btn-register" class="auth-tab" onclick="switchAuthTab('register')">
+                                <i class="fa-solid fa-user-plus"></i> Create Account
+                            </button>
+                        </div>
+
+                        <!-- Sign In Form -->
+                        <form id="form-login" class="auth-form" onsubmit="handleLoginSubmit(event)">
+                            <div class="form-title">
+                                <h3>Campus Portal Sign In</h3>
+                                <p>Access role-based service desk and operational tools</p>
+                            </div>
+
+                            <div id="login-error-alert" class="alert-box error d-none">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span id="login-error-msg">Invalid credentials. Please try again.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="login-username">Campus ID or Username *</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-user-tag input-icon"></i>
+                                    <input type="text" id="login-username" class="form-control" placeholder="e.g. student or admin" required autocomplete="username">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="login-password">Password *</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-lock input-icon"></i>
+                                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                                    <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('login-password', this)">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-remember-row">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="login-remember" checked>
+                                    <span class="checkmark"></span>
+                                    <span>Remember active session</span>
+                                </label>
+                                <a href="javascript:void(0)" class="forgot-link" onclick="fillTestCredentials()">Fill Student</a>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-submit-login">
+                                <span>Sign In to Campus</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                            <div class="auth-footer-help">
+                                <span>Standard passwords: <code>admin123</code>, <code>faculty123</code>, <code>student123</code>, <code>staff123</code></span>
+                            </div>
+                        </form>
+
+                        <!-- Registration Form -->
+                        <form id="form-register" class="auth-form d-none" onsubmit="handleRegisterSubmit(event)">
+                            <div class="form-title">
+                                <h3>New User Registration</h3>
+                                <p>Create your student or faculty campus profile</p>
+                            </div>
+
+                            <div id="reg-feedback-alert" class="alert-box d-none"></div>
+
+                            <div class="form-group">
+                                <label for="reg-fullname">Full Name *</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-id-card input-icon"></i>
+                                    <input type="text" id="reg-fullname" class="form-control" placeholder="e.g. Rohan Sharma" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label for="reg-username">Username / Roll No *</label>
+                                    <input type="text" id="reg-username" class="form-control" placeholder="e.g. rohan_24" required>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="reg-role">Role *</label>
+                                    <select id="reg-role" class="form-control" onchange="toggleSpecializationField(this.value)">
+                                        <option value="STUDENT" selected>🎓 Student</option>
+                                        <option value="FACULTY">👩‍🏫 Faculty Member</option>
+                                        <option value="STAFF">🔧 Maintenance Staff</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reg-email">Campus Email Address *</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-envelope input-icon"></i>
+                                    <input type="email" id="reg-email" class="form-control" placeholder="rohan@smartcampus.edu" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label for="reg-department">Department / Branch *</label>
+                                    <input type="text" id="reg-department" class="form-control" placeholder="e.g. CSE / IT" required>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="reg-phone">Contact Mobile</label>
+                                    <input type="tel" id="reg-phone" class="form-control" placeholder="+91 98765 43210">
+                                </div>
+                            </div>
+
+                            <div class="form-group d-none" id="group-specialization">
+                                <label for="reg-spec">Staff Trade / Specialization</label>
+                                <input type="text" id="reg-spec" class="form-control" placeholder="e.g. Electrician, AV Technician, Plumbing">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reg-password">Create Secure Password *</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-key input-icon"></i>
+                                    <input type="password" id="reg-password" class="form-control" placeholder="Min 6 characters" required minlength="6">
+                                    <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('reg-password', this)">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-submit-reg">
+                                <span>Complete Registration</span>
+                                <i class="fa-solid fa-user-check"></i>
+                            </button>
+
+                            <div class="auth-footer-help">
+                                <span>Already have an account? <a href="javascript:void(0)" onclick="switchAuthTab('login')">Sign in here</a></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: STUDENT DASHBOARD                  -->
+        <!-- ========================================== -->
+        <section id="view-student-dashboard" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Welcome back, <span class="highlight-text" id="student-welcome-name">Student</span> 👋</h2>
+                    <p class="subtitle">Campus Student Self-Service &amp; Operations Portal</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-primary" onclick="openNewTicketModal('MAINTENANCE')">
+                        <i class="fa-solid fa-wrench"></i> Report Issue
+                    </button>
+                    <button class="btn btn-secondary" onclick="openBookingModal()">
+                        <i class="fa-solid fa-calendar-plus"></i> Book Facility
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div class="quick-action-grid">
+                <div class="action-card" onclick="openNewTicketModal('MAINTENANCE')">
+                    <div class="action-icon bg-blue"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <div class="action-info">
+                        <h4>Maintenance Issue</h4>
+                        <p>AC, Fans, Projectors, Wi-Fi, Water Leakage</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right action-arrow"></i>
+                </div>
+                <div class="action-card" onclick="openNewTicketModal('SERVICE_REQUEST')">
+                    <div class="action-icon bg-purple"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="action-info">
+                        <h4>Service Request</h4>
+                        <p>Chairs, Event AV, Tables, Lab Equipment</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right action-arrow"></i>
+                </div>
+                <div class="action-card" onclick="openBookingModal()">
+                    <div class="action-icon bg-emerald"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="action-info">
+                        <h4>Book Hall / Lab</h4>
+                        <p>Auditorium, Seminar Halls, AI Lab</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right action-arrow"></i>
+                </div>
+                <div class="action-card" onclick="openLostFoundModal()">
+                    <div class="action-icon bg-amber"><i class="fa-solid fa-tag"></i></div>
+                    <div class="action-info">
+                        <h4>Lost &amp; Found</h4>
+                        <p>Report or claim lost items on campus</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right action-arrow"></i>
+                </div>
+            </div>
+
+            <!-- Dashboard Content Columns -->
+            <div class="dashboard-grid-2col">
+                <!-- Left: My Active Tickets with Live Progress Tracker -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>My Active Tickets &amp; Work Orders</span>
+                        </div>
+                        <a href="#tickets" class="link-btn">View All</a>
+                    </div>
+                    <div id="student-tickets-list" class="tickets-mini-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Right: My Bookings & Campus Bulletin -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <span>My Facility Reservations</span>
+                        </div>
+                        <a href="#bookings" class="link-btn">View All</a>
+                    </div>
+                    <div id="student-bookings-list" class="bookings-mini-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+
+                    <div class="announcement-banner">
+                        <div class="announcement-badge"><i class="fa-solid fa-bullhorn"></i> Campus Notice</div>
+                        <p>Campus Wi-Fi upgrade in Engineering Block C scheduled for this Saturday 8:00 PM. High-speed 10Gbps fiber backbone being deployed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: FACULTY DASHBOARD                  -->
+        <!-- ========================================== -->
+        <section id="view-faculty-dashboard" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Faculty Operations Portal: <span class="highlight-text" id="faculty-welcome-name">Professor</span> 🎓</h2>
+                    <p class="subtitle">Academic Classrooms, Seminar Hall Reservations &amp; Event Logistics</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-primary" onclick="openBookingModal()">
+                        <i class="fa-solid fa-calendar-check"></i> Priority Hall Booking
+                    </button>
+                    <button class="btn btn-secondary" onclick="openNewTicketModal('MAINTENANCE')">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Report Classroom Fault
+                    </button>
+                </div>
+            </div>
+
+            <!-- Faculty Metrics Overview -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-indigo"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="faculty-stat-bookings">2</span>
+                        <span class="stat-label">Confirmed Hall Bookings</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-teal"><i class="fa-solid fa-clock"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="faculty-stat-tickets">1</span>
+                        <span class="stat-label">Active Maintenance Tickets</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fa-solid fa-shield-check"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value">Instant</span>
+                        <span class="stat-label">Faculty Auto-Approval Privilege</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid-2col">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="fa-solid fa-landmark"></i> Departmental Seminar &amp; Lab Bookings</div>
+                        <button class="btn btn-sm btn-outline" onclick="openBookingModal()">+ Reserve Hall</button>
+                    </div>
+                    <div id="faculty-bookings-list" class="bookings-mini-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="fa-solid fa-screwdriver-wrench"></i> Classroom Equipment &amp; Service Requests</div>
+                        <button class="btn btn-sm btn-outline" onclick="openNewTicketModal('SERVICE_REQUEST')">+ Request Equipment</button>
+                    </div>
+                    <div id="faculty-tickets-list" class="tickets-mini-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: STAFF / TECHNICIAN DASHBOARD       -->
+        <!-- ========================================== -->
+        <section id="view-staff-dashboard" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Technician Workbench: <span class="highlight-text" id="staff-welcome-name">Staff</span> 🔧</h2>
+                    <p class="subtitle" id="staff-specialization-subtitle">Campus Maintenance Work Order Execution</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-outline" onclick="refreshTickets()"><i class="fa-solid fa-rotate"></i> Refresh Tasks</button>
+                </div>
+            </div>
+
+            <!-- Technician Workload KPI Strip -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-amber"><i class="fa-solid fa-list-check"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="staff-stat-assigned">0</span>
+                        <span class="stat-label">Assigned Work Orders</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fa-solid fa-person-digging"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="staff-stat-in-progress">0</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-emerald"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="staff-stat-resolved">0</span>
+                        <span class="stat-label">Resolved by You</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-rose"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="staff-stat-critical">0</span>
+                        <span class="stat-label">High / Critical Urgency</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technician Tasks Feed -->
+            <div class="panel-card mt-4">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fa-solid fa-clipboard-list"></i> Assigned Work Orders &amp; SLA Countdowns</div>
+                    <div class="filter-pills">
+                        <button class="pill active" onclick="filterStaffTickets('ALL', this)">All</button>
+                        <button class="pill" onclick="filterStaffTickets('ASSIGNED', this)">Assigned</button>
+                        <button class="pill" onclick="filterStaffTickets('IN_PROGRESS', this)">In Progress</button>
+                    </div>
+                </div>
+                <div id="staff-work-orders-container" class="staff-orders-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: ADMIN OPERATIONS COMMAND CENTER    -->
+        <!-- ========================================== -->
+        <section id="view-admin-dashboard" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Campus Operations Command Center 🛡️</h2>
+                    <p class="subtitle">Real-time Task Tracking, Facility Approvals &amp; Predictive Maintenance</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-outline" onclick="exportOperationsReport()"><i class="fa-solid fa-download"></i> Export Report (CSV)</button>
+                    <a href="#analytics" class="btn btn-primary"><i class="fa-solid fa-chart-line"></i> Deep Analytics</a>
+                </div>
+            </div>
+
+            <!-- Operations KPI Counters -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fa-solid fa-ticket"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="admin-stat-total">0</span>
+                        <span class="stat-label">Total Tickets Logged</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-emerald"><i class="fa-solid fa-percent"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="admin-stat-rate">0%</span>
+                        <span class="stat-label">SLA Resolution Rate</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-rose"><i class="fa-solid fa-bell-exclamation"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="admin-stat-overdue">0</span>
+                        <span class="stat-label">Overdue Tickets</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="admin-stat-bookings">0</span>
+                        <span class="stat-label">Active Bookings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Predictive Maintenance Alert Banner -->
+            <div id="predictive-alert-box" class="predictive-box">
+                <div class="predictive-icon"><i class="fa-solid fa-brain-circuit"></i></div>
+                <div class="predictive-content">
+                    <h4>Smart ML Triage &amp; Predictive Anomaly Detected</h4>
+                    <p id="predictive-alert-text">Campus heuristics detected multiple recurring plumbing complaints in Block C 3rd Floor washroom within 7 days. Automatic dispatch and pipe inspection recommended before pipe rupture.</p>
+                </div>
+                <button class="btn btn-sm btn-white" onclick="filterByLocation('Block C')">Inspect Incidents</button>
+            </div>
+
+            <!-- 2-Column Administrative Command Panels -->
+            <div class="dashboard-grid-2col mt-4">
+                <!-- Left Panel: Pending Facility Approval Queue -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-building-circle-check"></i>
+                            <span>Pending Facility Reservation Approvals</span>
+                        </div>
+                        <span class="badge badge-warning" id="pending-bookings-count">0 Pending</span>
+                    </div>
+                    <div id="admin-pending-bookings-list" class="admin-table-wrapper">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Right Panel: Unassigned or Critical Tickets Queue -->
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <span>Staff Allocation &amp; Critical Triage</span>
+                        </div>
+                        <a href="#tickets" class="link-btn">Manage All</a>
+                    </div>
+                    <div id="admin-unassigned-tickets-list" class="admin-table-wrapper">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: TICKETS (MAINTENANCE & REQUESTS)   -->
+        <!-- ========================================== -->
+        <section id="view-tickets" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Campus Service &amp; Maintenance Tickets</h2>
+                    <p class="subtitle">Complete numbered ticket log with SLA tracking &amp; automated triage</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-primary" onclick="openNewTicketModal('MAINTENANCE')">
+                        <i class="fa-solid fa-plus"></i> New Ticket
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Filters & Search Toolbar -->
+            <div class="toolbar-panel glass-panel">
+                <div class="search-input-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="ticket-search-input" placeholder="Search by ticket #, location, title..." onkeyup="filterTicketsTable()">
+                </div>
+                <div class="filter-controls">
+                    <select id="filter-ticket-category" onchange="filterTicketsTable()">
+                        <option value="ALL">All Categories</option>
+                        <option value="ELECTRICAL">Electrical (Fans, Lights)</option>
+                        <option value="HVAC_AC">HVAC &amp; AC</option>
+                        <option value="PROJECTOR_AV">Projectors &amp; AV</option>
+                        <option value="WIFI_NETWORK">Wi-Fi &amp; Network</option>
+                        <option value="PLUMBING">Plumbing &amp; Water</option>
+                        <option value="FURNITURE">Furniture</option>
+                        <option value="EVENT_LOGISTICS">Event Logistics</option>
+                    </select>
+                    <select id="filter-ticket-status" onchange="filterTicketsTable()">
+                        <option value="ALL">All Statuses</option>
+                        <option value="SUBMITTED">Submitted</option>
+                        <option value="ASSIGNED">Assigned</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="RESOLVED">Resolved</option>
+                        <option value="CLOSED">Closed</option>
+                    </select>
+                    <select id="filter-ticket-priority" onchange="filterTicketsTable()">
+                        <option value="ALL">All Priorities</option>
+                        <option value="CRITICAL">Critical (2h SLA)</option>
+                        <option value="HIGH">High (8h SLA)</option>
+                        <option value="MEDIUM">Medium (24h SLA)</option>
+                        <option value="LOW">Low (72h SLA)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tickets Master Table / Grid -->
+            <div class="table-card glass-panel mt-3">
+                <div class="table-responsive">
+                    <table class="data-table" id="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket #</th>
+                                <th>Subject &amp; Location</th>
+                                <th>Type &amp; Category</th>
+                                <th>Priority &amp; SLA</th>
+                                <th>Assigned Staff</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: FACILITY BOOKING SCHEDULER         -->
+        <!-- ========================================== -->
+        <section id="view-bookings" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Campus Facility Reservation Matrix</h2>
+                    <p class="subtitle">Strict double-booking prevention engine for halls, seminar rooms, and labs</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-primary" onclick="openBookingModal()">
+                        <i class="fa-solid fa-plus"></i> Reserve Facility
+                    </button>
+                </div>
+            </div>
+
+            <!-- Facility Selector Tabs -->
+            <div class="facility-tabs-bar">
+                <button class="facility-tab active" onclick="switchFacilityTab('ALL', this)"><i class="fa-solid fa-layer-group"></i> All Facilities</button>
+                <button class="facility-tab" onclick="switchFacilityTab('Central Auditorium', this)"><i class="fa-solid fa-masks-theater"></i> Auditorium (1000)</button>
+                <button class="facility-tab" onclick="switchFacilityTab('Seminar Hall A', this)"><i class="fa-solid fa-chalkboard"></i> Seminar Hall A (200)</button>
+                <button class="facility-tab" onclick="switchFacilityTab('Advanced AI Computer Lab', this)"><i class="fa-solid fa-microchip"></i> Advanced AI Lab (60)</button>
+                <button class="facility-tab" onclick="switchFacilityTab('Indoor Sports Complex', this)"><i class="fa-solid fa-volleyball"></i> Sports Complex</button>
+            </div>
+
+            <!-- Date Selector and Conflict Matrix View -->
+            <div class="booking-schedule-container glass-panel mt-3">
+                <div class="schedule-header">
+                    <div class="schedule-date-nav">
+                        <button class="icon-btn" onclick="shiftBookingDate(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="current-schedule-date-display" class="date-title">Today: 19 Oct 2026</span>
+                        <button class="icon-btn" onclick="shiftBookingDate(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="schedule-legend">
+                        <span class="legend-item"><span class="dot approved"></span> Confirmed / Booked</span>
+                        <span class="legend-item"><span class="dot pending"></span> Pending Approval</span>
+                        <span class="legend-item"><span class="dot available"></span> Available Slot</span>
+                    </div>
+                </div>
+
+                <!-- Visual Time-Slot Grid -->
+                <div id="booking-timeline-matrix" class="timeline-matrix">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Master Bookings Table -->
+            <div class="table-card glass-panel mt-4">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fa-solid fa-list-check"></i> All Reservation Records</div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Booking Ref</th>
+                                <th>Facility</th>
+                                <th>Event Purpose</th>
+                                <th>Date &amp; Slot</th>
+                                <th>Reserved By</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-master-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 8: LOST & FOUND PINBOARD              -->
+        <!-- ========================================== -->
+        <section id="view-lost-found" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Campus Lost &amp; Found Pinboard 🏷️</h2>
+                    <p class="subtitle">Report missing belongings or verify and claim found campus items</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-primary" onclick="openLostFoundModal('FOUND')">
+                        <i class="fa-solid fa-hand-holding-heart"></i> I Found an Item
+                    </button>
+                    <button class="btn btn-secondary" onclick="openLostFoundModal('LOST')">
+                        <i class="fa-solid fa-circle-question"></i> I Lost Something
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="lf-filter-bar">
+                <div class="filter-pills">
+                    <button class="pill active" onclick="filterLostFound('ALL', this)">All Items</button>
+                    <button class="pill" onclick="filterLostFound('FOUND', this)">Found Items (Available to Claim)</button>
+                    <button class="pill" onclick="filterLostFound('LOST', this)">Missing Reports</button>
+                </div>
+                <div class="search-input-box sm">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="lf-search-input" placeholder="Search calculator, charger, ID card..." onkeyup="searchLostFound()">
+                </div>
+            </div>
+
+            <!-- Lost & Found Cards Grid -->
+            <div id="lost-found-grid" class="lost-found-grid mt-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 9: ANALYTICS & OPERATIONS SLAs        -->
+        <!-- ========================================== -->
+        <section id="view-analytics" class="app-view d-none">
+            <div class="view-header">
+                <div>
+                    <h2>Campus Operational Intelligence &amp; SLA Analytics</h2>
+                    <p class="subtitle">Data-driven performance metrics, recurring fault trends, and resource utilization</p>
+                </div>
+                <div class="view-header-actions">
+                    <button class="btn btn-outline" onclick="exportAnalyticsReport()"><i class="fa-solid fa-file-export"></i> Export Report (CSV)</button>
+                    <button class="btn btn-primary" onclick="renderAnalytics()"><i class="fa-solid fa-arrows-rotate"></i> Refresh Analytics</button>
+                </div>
+            </div>
+
+            <!-- Executive KPI Row -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fa-solid fa-chart-line-up"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="kpi-resolution-rate">94.2%</span>
+                        <span class="stat-label">SLA Compliance Rate</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-emerald"><i class="fa-solid fa-stopwatch-20"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="kpi-avg-resolution">3.8 Hrs</span>
+                        <span class="stat-label">Avg. Resolution Turnaround</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-amber"><i class="fa-solid fa-star"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="kpi-user-rating">4.8 / 5</span>
+                        <span class="stat-label">Student &amp; Faculty Satisfaction</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple"><i class="fa-solid fa-door-open"></i></div>
+                    <div class="stat-details">
+                        <span class="stat-value" id="kpi-utilization">81%</span>
+                        <span class="stat-label">Facility Utilization Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Visual Charts Grid -->
+            <div class="charts-grid-2col mt-4">
+                <div class="chart-panel glass-panel">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-pie"></i> Tickets by Maintenance Category</h4>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-categories"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-panel glass-panel">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-column"></i> Ticket Status Breakdown</h4>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-statuses"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-panel glass-panel">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-line"></i> Weekly Resolution Velocity &amp; Load</h4>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-velocity"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-panel glass-panel">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-building"></i> Facility Booking Popularity</h4>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-facilities"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODALS SECTION                             -->
+    <!-- ========================================== -->
+
+    <!-- MODAL 1: NEW TICKET MODAL WITH LIVE AI TRIAGE -->
+    <div id="modal-ticket" class="modal-overlay d-none">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-circle-plus highlight"></i>
+                    <h3 id="ticket-modal-title">Report Campus Issue</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('modal-ticket')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-new-ticket" onsubmit="submitNewTicket(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="ticket-form-type" value="MAINTENANCE">
+
+                    <div class="form-group">
+                        <label for="ticket-title">Issue Title / Short Summary *</label>
+                        <input type="text" id="ticket-title" class="form-control" placeholder="e.g. Projector HDMI not connecting in Seminar Hall A" required oninput="triggerLiveTriage()">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="ticket-category">Category *</label>
+                            <select id="ticket-category" class="form-control" required onchange="triggerLiveTriage()">
+                                <option value="ELECTRICAL">Electrical (Fans, Lights, Power)</option>
+                                <option value="HVAC_AC">HVAC &amp; Air Conditioning</option>
+                                <option value="PROJECTOR_AV">Projectors, Smart Boards &amp; AV</option>
+                                <option value="WIFI_NETWORK">Wi-Fi &amp; Campus Network</option>
+                                <option value="PLUMBING">Plumbing &amp; Water Dispensers</option>
+                                <option value="FURNITURE">Classroom Furniture</option>
+                                <option value="EVENT_LOGISTICS">Event Logistics (Chairs, Mic)</option>
+                                <option value="LAB_EQUIPMENT">Lab PCs &amp; Instruments</option>
+                                <option value="OTHER">Other Campus Service</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="ticket-location">Specific Location *</label>
+                            <input type="text" id="ticket-location" class="form-control" placeholder="e.g. Block B, 2nd Floor, Room 204" required oninput="triggerLiveTriage()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticket-desc">Detailed Description *</label>
+                        <textarea id="ticket-desc" rows="3" class="form-control" placeholder="Describe the symptom, when it started, and impact on lectures or work..." required oninput="triggerLiveTriage()"></textarea>
+                    </div>
+
+                    <!-- Unique College Feature: LIVE AI / HEURISTIC TRIAGE BOX -->
+                    <div id="ai-triage-preview-card" class="ai-triage-card">
+                        <div class="triage-card-header">
+                            <span class="triage-badge"><i class="fa-solid fa-brain-circuit"></i> Smart Triage Engine</span>
+                            <span class="urgency-meter" id="triage-meter">Urgency: 45%</span>
+                        </div>
+                        <div class="triage-details">
+                            <p id="triage-reason-text">Type above to preview automated classification, SLA target, and auto-dispatch...</p>
+                            <div class="triage-tags">
+                                <span class="tag-pill" id="triage-rec-priority">Priority: MEDIUM (24h SLA)</span>
+                                <span class="tag-pill" id="triage-rec-staff">Suggested Staff: Auto-Match</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-ticket')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-ticket">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: TICKET DETAILS & LIFECYCLE STEPPER -->
+    <div id="modal-ticket-detail" class="modal-overlay d-none">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-header">
+                <div>
+                    <span class="badge" id="modal-detail-number">TKT-2026-1001</span>
+                    <h3 id="modal-detail-title">Ticket Subject</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('modal-ticket-detail')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Visual Ticket Lifecycle Stepper -->
+                <div class="lifecycle-stepper">
+                    <div class="step-node" id="step-submitted">
+                        <div class="step-circle"><i class="fa-solid fa-file-lines"></i></div>
+                        <span class="step-label">Submitted</span>
+                    </div>
+                    <div class="step-line" id="line-assigned"></div>
+                    <div class="step-node" id="step-assigned">
+                        <div class="step-circle"><i class="fa-solid fa-user-check"></i></div>
+                        <span class="step-label">Assigned</span>
+                    </div>
+                    <div class="step-line" id="line-progress"></div>
+                    <div class="step-node" id="step-inprogress">
+                        <div class="step-circle"><i class="fa-solid fa-person-digging"></i></div>
+                        <span class="step-label">In Progress</span>
+                    </div>
+                    <div class="step-line" id="line-resolved"></div>
+                    <div class="step-node" id="step-resolved">
+                        <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+                        <span class="step-label">Resolved</span>
+                    </div>
+                    <div class="step-line" id="line-closed"></div>
+                    <div class="step-node" id="step-closed">
+                        <div class="step-circle"><i class="fa-solid fa-star"></i></div>
+                        <span class="step-label">Closed</span>
+                    </div>
+                </div>
+
+                <div class="detail-grid mt-4">
+                    <div class="detail-info-box">
+                        <h4>Ticket Details</h4>
+                        <div class="detail-row"><span class="lbl">Location:</span> <strong id="modal-detail-location">-</strong></div>
+                        <div class="detail-row"><span class="lbl">Category:</span> <strong id="modal-detail-category">-</strong></div>
+                        <div class="detail-row"><span class="lbl">Priority:</span> <strong id="modal-detail-priority">-</strong></div>
+                        <div class="detail-row"><span class="lbl">SLA Deadline:</span> <strong id="modal-detail-sla">-</strong></div>
+                        <div class="detail-row"><span class="lbl">Reported By:</span> <strong id="modal-detail-creator">-</strong></div>
+                        <div class="detail-row"><span class="lbl">Assigned Technician:</span> <strong id="modal-detail-staff">-</strong></div>
+                        <div class="detail-desc-box mt-3">
+                            <span class="lbl">Full Description:</span>
+                            <p id="modal-detail-desc">-</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-actions-box">
+                        <h4>Resolution &amp; Actions</h4>
+                        <div id="staff-resolution-block" class="d-none">
+                            <label for="detail-resolution-notes">Technician Work Notes:</label>
+                            <textarea id="detail-resolution-notes" rows="3" class="form-control" placeholder="Explain the fix carried out..."></textarea>
+                            <div class="mt-2 d-flex gap-2">
+                                <button class="btn btn-sm btn-info" onclick="technicianUpdateStatus('IN_PROGRESS')">Mark In Progress</button>
+                                <button class="btn btn-sm btn-success" onclick="technicianUpdateStatus('RESOLVED')">Mark as Resolved</button>
+                            </div>
+                        </div>
+
+                        <!-- Admin Staff Reassignment Control -->
+                        <div id="admin-assign-block" class="d-none mt-3">
+                            <label for="admin-select-staff">Assign / Reassign Staff:</label>
+                            <div class="d-flex gap-2">
+                                <select id="admin-select-staff" class="form-control sm"></select>
+                                <button class="btn btn-sm btn-primary" onclick="adminAssignStaffAction()">Assign</button>
+                            </div>
+                        </div>
+
+                        <!-- User Feedback / Star Rating Block (When Resolved) -->
+                        <div id="user-rating-block" class="d-none mt-3 rating-card">
+                            <h5>Rate Service Resolution</h5>
+                            <div class="star-rating" id="rating-stars">
+                                <i class="fa-solid fa-star star" data-star="1" onclick="selectRating(1)"></i>
+                                <i class="fa-solid fa-star star" data-star="2" onclick="selectRating(2)"></i>
+                                <i class="fa-solid fa-star star" data-star="3" onclick="selectRating(3)"></i>
+                                <i class="fa-solid fa-star star" data-star="4" onclick="selectRating(4)"></i>
+                                <i class="fa-solid fa-star star" data-star="5" onclick="selectRating(5)"></i>
+                            </div>
+                            <input type="text" id="user-feedback-comment" class="form-control sm mt-2" placeholder="Optional comments on service quality...">
+                            <button class="btn btn-sm btn-primary mt-2" onclick="submitTicketRating()">Submit Feedback &amp; Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: FACILITY BOOKING WITH CONFLICT DETECTION -->
+    <div id="modal-booking" class="modal-overlay d-none">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-calendar-check highlight"></i>
+                    <h3>Reserve Campus Facility</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-new-booking" onsubmit="submitNewBooking(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="bkg-facility">Facility *</label>
+                        <select id="bkg-facility" class="form-control" required onchange="checkBookingConflictLive()">
+                            <option value="Central Auditorium">Central Auditorium (1000 Seats)</option>
+                            <option value="Seminar Hall A">Seminar Hall A (200 Seats)</option>
+                            <option value="Seminar Hall B">Seminar Hall B (200 Seats)</option>
+                            <option value="Advanced AI Computer Lab">Advanced AI Computer Lab (60 Workstations)</option>
+                            <option value="Indoor Sports Complex">Indoor Sports Complex</option>
+                            <option value="Smart Conference Room">Smart Conference Room (40 Seats)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bkg-purpose">Event Title / Purpose *</label>
+                        <input type="text" id="bkg-purpose" class="form-control" placeholder="e.g. National Technical Symposium Keynote" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="bkg-date">Booking Date *</label>
+                            <input type="date" id="bkg-date" class="form-control" required onchange="checkBookingConflictLive()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="bkg-start">Start Time *</label>
+                            <input type="time" id="bkg-start" class="form-control" value="09:30" required onchange="checkBookingConflictLive()">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="bkg-end">End Time *</label>
+                            <input type="time" id="bkg-end" class="form-control" value="12:30" required onchange="checkBookingConflictLive()">
+                        </div>
+                    </div>
+
+                    <!-- Live Conflict Prevention Alert -->
+                    <div id="booking-conflict-alert" class="conflict-banner d-none">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div id="booking-conflict-msg">Conflict Alert: This slot overlaps with an existing reservation.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="bkg-attendees">Expected Attendees</label>
+                            <input type="number" id="bkg-attendees" class="form-control" placeholder="e.g. 150">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="bkg-specs">AV / Logistics Needs</label>
+                            <input type="text" id="bkg-specs" class="form-control" placeholder="e.g. 2 Wireless Mics, Projector">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-booking')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-booking">
+                        <i class="fa-solid fa-check"></i> Confirm Reservation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: REPORT LOST OR FOUND ITEM -->
+    <div id="modal-lostfound" class="modal-overlay d-none">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-tags highlight"></i>
+                    <h3 id="lf-modal-title">Report Campus Item</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('modal-lostfound')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-new-lf" onsubmit="submitLostFoundItem(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="lf-type" value="FOUND">
+
+                    <div class="form-group">
+                        <label for="lf-title">Item Name *</label>
+                        <input type="text" id="lf-title" class="form-control" placeholder="e.g. Scientific Calculator Casio FX-991EX" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="lf-category">Category *</label>
+                            <select id="lf-category" class="form-control">
+                                <option value="Electronics">Electronics (Chargers, Laptops, Earbuds)</option>
+                                <option value="Wallets &amp; IDs">Wallets, College ID, Keys</option>
+                                <option value="Books &amp; Notes">Books &amp; Folders</option>
+                                <option value="Bottles &amp; Personal">Water Bottles &amp; Personal</option>
+                                <option value="Other">Other Miscellaneous</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="lf-date">Incident Date *</label>
+                            <input type="date" id="lf-date" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lf-location">Location (Where found / lost) *</label>
+                        <input type="text" id="lf-location" class="form-control" placeholder="e.g. Central Library 2nd Floor, Table 14" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lf-desc">Description &amp; Identifying Marks *</label>
+                        <textarea id="lf-desc" rows="3" class="form-control" placeholder="Color, stickers, scratches, handed over to which office..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lf-contact">Contact Info / Handover Desk</label>
+                        <input type="text" id="lf-contact" class="form-control" placeholder="e.g. Handed over to Library In-charge (Ext 204)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-lostfound')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-bullhorn"></i> Post to Pinboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: CLAIM ITEM MODAL -->
+    <div id="modal-claim" class="modal-overlay d-none">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-hand-holding-heart highlight"></i>
+                    <h3>Claim This Item</h3>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal('modal-claim')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-claim-item" onsubmit="submitClaimVerification(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="claim-item-id">
+                    <p>Provide specific verification details only the rightful owner would know (e.g., sticker details, wallpaper, password hint, unique marks):</p>
+                    <div class="form-group">
+                        <label for="claim-note">Proof of Ownership / Verification Details *</label>
+                        <textarea id="claim-note" rows="3" class="form-control" placeholder="The sticker on the back is blue with my initials..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-claim')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Claim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
